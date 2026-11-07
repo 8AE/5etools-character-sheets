@@ -19,6 +19,20 @@ Open [Character Sheets](http://127.0.0.1:5050/characters.html), or choose **Play
 
 The generated character page, CSS, and PDF-reader libraries are included. A full site build is not needed to get started. As in the upstream source repository, the separately distributed `img/` artwork directory is not included.
 
+## Screenshots
+
+Open **Character Sheet** from the **Players** row on the homepage.
+
+![The Players row with the Character Sheet tile beside Species and Classes](doc/screenshots/homepage-character-sheet.png)
+
+In **Build & level up**, edit the character and see the live stat block alongside the class choices.
+
+![A level 1 Dragonborn rogue in the builder, with class progression on the left and the live stat block on the right](doc/screenshots/character-builder.png)
+
+During play, use **Stat block** to track hit points, take a rest, or roll an attack.
+
+![The rogue’s bestiary-style stat block beside controls for hit points, rests, initiative, and attacks](doc/screenshots/character-stat-block.png)
+
 ## Character-sheet features
 
 - **Build from the library:** classes, subclasses, species, backgrounds, feats, spells, and equipment from this clone's data and installed homebrew, with 2014 and 2024 content.
