@@ -381,6 +381,7 @@ class _RenderBestiaryImplBase {
 	/* -------------------------------------------- */
 
 	_getTdChallenge (mon, opts) {
+		if (opts.isCharacter) return `<td colspan="${this._style === "classic" ? "3" : "6"}"><strong>Level</strong> ${mon.level}${this._style === "classic" ? "" : ` (PB ${Renderer.monster.getPbPart(mon)})`}</td>`;
 		const ptLabel = `<strong ${this._style === "classic" ? "" : `title="Challenge Rating"`}>${this._style !== "classic" ? "CR" : "Challenge"}</strong>`;
 
 		if (Parser.crToNumber(mon.cr) >= VeCt.CR_UNKNOWN && this._style === "classic") return `<td colspan="3">${ptLabel} <span>\u2014</span></td>`;

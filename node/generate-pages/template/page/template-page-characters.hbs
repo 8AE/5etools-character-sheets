@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{> "head" }}
+
+<body class="chars-page">
+{{> "overlayNoise" }}
+<div class="viewport-wrapper">
+	{{> "navbar" }}
+	<main class="container chars-app" id="characters-app" aria-label="Character sheets">
+		<div class="chars-loading" role="status">Loading character options from this 5etools library…</div>
+	</main>
+</div>
+<div id="characters-status" class="chars-toast" role="status" aria-live="polite" hidden></div>
+{{> "scripts" }}
+</body>
+</html>
