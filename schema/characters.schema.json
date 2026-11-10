@@ -1,0 +1,128 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "5etools character sheet library, version 1",
+	"type": "object",
+	"required": ["fileType", "version", "character"],
+	"properties": {
+		"_meta": {"type": "object"},
+		"fileType": {"const": "5etools-characters"},
+		"version": {"const": 1},
+		"character": {"type": "array", "minItems": 1, "maxItems": 200, "items": {"$ref": "#/definitions/character"}}
+	},
+	"definitions": {
+		"reference": {"type": "string", "maxLength": 100000},
+		"numberMap": {"type": "object", "additionalProperties": {"type": "number"}},
+		"choiceMap": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+		"customItem": {
+			"type": "object", "required": ["name", "description", "weight"],
+			"properties": {
+				"name": {"type": "string", "minLength": 1, "maxLength": 200},
+				"description": {"type": "string", "maxLength": 10000},
+				"weight": {"type": "number", "minimum": 0, "maximum": 100000},
+				"attack": {
+					"type": "object", "required": ["toHit", "damage", "damageType", "range", "reach", "isRanged", "thrown"],
+					"properties": {
+						"toHit": {"type": "integer", "minimum": -100, "maximum": 100},
+						"damage": {"type": "string", "pattern": "^[0-9d+\\- ]{1,100}$"},
+						"damageType": {"type": "string", "maxLength": 200, "pattern": "^[^<>{}]*$"},
+						"range": {"type": "string", "maxLength": 200, "pattern": "^[^<>{}]*$"},
+						"reach": {"type": "string", "maxLength": 200, "pattern": "^[^<>{}]*$"},
+						"isRanged": {"type": "boolean"}, "thrown": {"type": "boolean"}
+					}
+				}
+			}
+		},
+		"customOption": {
+			"type": "object",
+			"required": ["id", "kind", "name", "description"],
+			"properties": {
+				"id": {"type": "string", "pattern": "^[a-z0-9_-]{1,80}$"},
+				"kind": {"enum": ["language", "tool", "feat", "optionalfeature"]},
+				"name": {"type": "string", "minLength": 1, "maxLength": 200},
+				"description": {"type": "string", "maxLength": 10000}
+			}
+		},
+		"character": {
+			"type": "object",
+			"required": ["name"],
+			"properties": {
+				"id": {"type": "string"},
+				"name": {"type": "string", "minLength": 1, "maxLength": 200},
+				"source": {"type": "string"},
+				"rules": {"enum": ["2014", "2024"]},
+				"player": {"type": "string"},
+				"race": {"$ref": "#/definitions/reference"},
+				"background": {"$ref": "#/definitions/reference"},
+				"alignment": {"type": "string"},
+				"size": {"enum": ["", "T", "S", "M", "L", "H", "G"]},
+				"experience": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+				"abilities": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 30}},
+				"abilityMethod": {"type": "string"},
+				"abilityChoices": {"type": "object"},
+				"skillChoices": {"$ref": "#/definitions/choiceMap"},
+				"proficiencyChoices": {"$ref": "#/definitions/choiceMap"},
+				"proficiencyPatterns": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 100}},
+				"defenseChoices": {"$ref": "#/definitions/choiceMap"},
+				"featureChoices": {"$ref": "#/definitions/choiceMap"},
+				"spellChoices": {"type": "object"},
+				"skills": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 2}},
+				"saves": {"type": "object", "additionalProperties": {"type": "boolean"}},
+				"armorTraining": {"type": "object", "propertyNames": {"enum": ["light", "medium", "heavy", "shield"]}, "additionalProperties": {"type": "boolean"}},
+				"toolTraining": {"type": "object", "propertyNames": {"minLength": 1, "maxLength": 200}, "additionalProperties": {"enum": [1, 2]}},
+				"classes": {
+					"type": "array", "maxItems": 20,
+					"items": {
+						"type": "object", "required": ["id", "uid", "level"],
+						"properties": {
+							"id": {"type": "string", "minLength": 1},
+							"uid": {"$ref": "#/definitions/reference"},
+							"level": {"type": "integer", "minimum": 1, "maximum": 20},
+							"subclass": {"$ref": "#/definitions/reference"},
+							"hpRolls": {"$ref": "#/definitions/numberMap"},
+							"improvements": {"type": "object"},
+							"options": {"$ref": "#/definitions/choiceMap"}
+						}
+					}
+				},
+				"feats": {"type": "array", "items": {"$ref": "#/definitions/reference"}},
+				"optionalFeatures": {"type": "array", "items": {"$ref": "#/definitions/reference"}},
+				"customOptions": {"type": "array", "maxItems": 200, "items": {"$ref": "#/definitions/customOption"}},
+				"inventory": {
+					"type": "array",
+					"items": {
+						"type": "object", "required": ["uid"],
+						"properties": {
+							"id": {"type": "string"},
+							"uid": {"$ref": "#/definitions/reference"},
+							"quantity": {"type": "integer", "minimum": 0, "maximum": 9999},
+							"equipped": {"type": "boolean"},
+							"attuned": {"type": "boolean"},
+							"proficient": {"type": "boolean"},
+							"twoHanded": {"type": "boolean"},
+							"custom": {"$ref": "#/definitions/customItem"}
+						}
+					}
+				},
+				"spells": {"type": "array", "items": {"type": "object", "required": ["uid", "classId"], "properties": {"uid": {"$ref": "#/definitions/reference"}, "classId": {"type": "string"}, "prepared": {"type": "boolean"}, "ritualAllowed": {"type": "boolean"}}}},
+				"resources": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "max": {"type": "integer", "minimum": 1, "maximum": 10000}, "recovery": {"enum": ["short", "long", "manual"]}}}},
+				"currency": {"$ref": "#/definitions/numberMap"},
+				"adjustments": {"$ref": "#/definitions/numberMap"},
+				"state": {"type": "object"},
+				"importedMpmb": {
+					"type": "object", "required": ["fileName", "title", "warnings", "unmatched", "importedAt"],
+					"properties": {
+						"fileName": {"type": "string", "maxLength": 255},
+						"title": {"type": "string", "maxLength": 500},
+						"warnings": {"type": "array", "maxItems": 500, "items": {"type": "string"}},
+						"unmatched": {"type": "array", "maxItems": 500, "items": {"type": "object", "required": ["kind", "name", "description"], "properties": {"kind": {"type": "string"}, "name": {"type": "string", "maxLength": 200}, "description": {"type": "string", "maxLength": 10000}}}},
+						"importedAt": {"type": "number"}
+					}
+				},
+				"notes": {"type": "string", "maxLength": 100000},
+				"log": {"type": "array", "items": {"type": "string"}},
+				"created": {"type": "number"},
+				"updated": {"type": "number"}
+			}
+		}
+	}
+}

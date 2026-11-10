@@ -361,6 +361,15 @@ class _PageGeneratorSearch extends PageGeneratorGeneric {
 	];
 }
 
+class _PageGeneratorCharacters extends PageGeneratorGeneric {
+	_filename = "page/template-page-characters.hbs";
+	_page = "characters.html";
+	_pageTitle = "Character Sheets";
+	_navbarDescription = "Build your character. Bring the stat block to the table.";
+	_stylesheets = ["characters"];
+	_scriptsModules = ["characters.js"];
+}
+
 class _PageGeneratorStatgen extends PageGeneratorGeneric {
 	_filename = "page/template-page-statgen.hbs";
 	_page = "statgen.html";
@@ -411,4 +420,5 @@ export const PAGE_GENERATORS = 	[
 	new _PageGeneratorRenderdemo(),
 	new _PageGeneratorSearch(),
 	new _PageGeneratorStatgen(),
+	new _PageGeneratorCharacters(),
 ];
