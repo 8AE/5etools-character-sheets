@@ -788,6 +788,24 @@ describe("Character sheet calculations with the local 5etools dataset", () => {
 });
 
 describe("Character JSON and dice safety", () => {
+	it("creates and reimports a character when the browser lacks crypto.randomUUID", () => {
+		const cryptoDescriptor = Object.getOwnPropertyDescriptor(globalThis, "crypto");
+		const browserCrypto = {getRandomValues: globalThis.crypto.getRandomValues.bind(globalThis.crypto)};
+		Object.defineProperty(globalThis, "crypto", {configurable: true, value: browserCrypto});
+		globalThis.window = globalThis;
+		try {
+			const c = make("Rogue", 1, "XPHB");
+			const [copy] = importCharacters(exportCharacters([c]));
+			const ids = [c.id, c.classes[0].id, copy.id];
+			for (const id of ids) expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+			expect(new Set(ids).size).toBe(ids.length);
+			expect(copy.classes).toEqual(c.classes);
+		} finally {
+			delete globalThis.window;
+			Object.defineProperty(globalThis, "crypto", cryptoDescriptor);
+		}
+	});
+
 	it("validates generated exports against the published envelope schema", () => {
 		const schema = JSON.parse(fs.readFileSync("schema/characters.schema.json", "utf8"));
 		const validate = new Ajv().compile(schema);

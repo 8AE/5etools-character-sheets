@@ -9,7 +9,7 @@ export const SKILLS = {
 };
 export const uid = entity => entity ? entity._customId ? `custom:${entity._customId}` : `${entity.name}|${entity.source}` : "";
 export const subclassUid = entity => entity ? `${uid(entity)}|${entity.className}|${entity.classSource}` : "";
-export const newId = () => globalThis.crypto.randomUUID();
+export const newId = () => globalThis.crypto?.randomUUID?.() ?? CryptUtil.uid();
 export const modifier = score => Math.floor((score - 10) / 2);
 export const signed = value => `${value >= 0 ? "+" : ""}${value}`;
 export const clamp = (n, min, max) => Math.max(min, Math.min(max, Number(n) || 0));
